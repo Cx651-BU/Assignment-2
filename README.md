@@ -1,0 +1,112 @@
+# A2: C Memory Allocator
+
+In this assignment, you will  build and profile a very simple implementation of malloc in C. Through this process, you will explore  the critical components of a memory management library. You will choose an allocation policy and a freelist structure. Then, you will explore how these choices can have performance implications!
+
+
+## Part 1: Implement Malloc/Free with First Fit Strategy
+
+A memory allocation library has two primary jobs:
+1. responding to a user's call to `malloc(size_t size)` which returns a pointer to an available block of memory of at least `size` bytes
+2. responding to a user's call to `free(void * ptr)` which marks the previously allocated block of memory as "free" or once again available to be allocated to future malloc requests.
+
+In order to implement these two basic functionalities, the malloc library must maintain some data structure of what portions of memory are in-use or available.
+
+We suggest the following strategy: an implicit doubly-linked list made from "header" metadata block at the start of each memory allocation.
+
+```
+memory:
+    |  m_header | size bytes of data | next m_header | size bytes of data | ... 
+```
+
+The second question is which portion of the free memory should we allocate to this request? There are several choices:
+- First-fit
+- Best-fit
+- ETC.
+
+For speed, let's choose a first-fit strategy.
+
+Secondly, what if the found block is too big? We must implement *splitting*. For example, if we have the following:
+
+Say a client calls: `new_malloc(64)`
+```
+memory:
+    |  m_header in_use=FALSE size=128 | 128 bytes of data | ... 
+```
+
+We should split memory and respond as follows:
+
+```
+memory:
+    |  m_header in_use=TRUE size=64 | 64 bytes of data | m_header in_USE=FALSE size=128 - 64 - sizeof(m_header) |  128 - 64 - sizeof(m_header) bytes of data |
+```
+
+Make sure to take into consideration that after splitting a block of memory, we also need a new metadata header for the new block.
+
+> [!IMPORTANT]
+>  **Task: Implement new_malloc and new_free**
+> - use a first-fit strategy to select a memory block
+> - Make sure to **split** the chosen allocation to not allocate too much memory!
+
+At this point running `make test` and `./test ALL` should pass.
+
+## Part 2: Implement Malloc/Free with First Fit Strategy and Coalesce 
+
+Now, notice there are some inefficiencies with our strategy.
+
+Take a look at `./test 3`'s output.
+
+Where does your strategy fall short?
+
+> [!IMPORTANT]
+> **Task: In questions.txt, describe why allocations fail in ./test 3**
+
+Now, we will implement a few improvements.
+
+First, let us **align** our allocations to multiples of 16. 
+
+If a client requests 10 bytes of data, we should treat it as if they requested 16 bytes.
+
+Consider what affect this has on our freelist.
+
+Secondly, let's **coalesce** blocks on calls to `free()`
+
+How should this work?
+
+Consider the following example:
+
+```
+memory:
+
+    |m_header in_use=FALSE size = a | ... |  m_header in_use=TRUE size = b| ... | m_header in_use=FALSE size = c |
+
+If we free the middle block, we want:
+
+    |m_header in_use=FALSE size = a+b+c + sizeof(m_header) * 2 | ... |
+
+```
+
+On each free, we wish to check if the previous block and/or the next block are also not in use. If so, we can coalesce the current freed block with the next/previous block to get a larger region of continuous memory for future allocations.
+
+> [!IMPORTANT]
+> **Task: implement alignment and coalescing in memory-coalesce.c**
+
+At this point running `make test-2` and `./test-2 1`, `./test-2 2`, `./test-2 3` should all pass.
+
+## Part 3: Test your Basic Allocators
+
+Let us test our two allocators.
+
+Run the script `./plot.sh`, this will generate output text files in `data/` folder.
+
+Open the files in `data/` and read through the outputted results. Do you notice any trends? 
+
+## Part 4: Plot your Results
+
+Let us test our two allocators.
+
+Run the script `./plot.py data/t.out data/t2.out`, this will generate an output plot of time to allocate and failures for our two approaches.
+
+> [!IMPORTANT]
+> **Task: In `questions.txt`, describe what you see in plot-fail_rate.png and plot-thoughput.png.**
+> Which approach has a better throughput and why? Label your answer `(2)`.
+> Which approach has a better fail rate and why? Label your answer `(3)`.
