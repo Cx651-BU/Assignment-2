@@ -90,7 +90,7 @@ On each free, we wish to check if the previous block and/or the next block are a
 > [!IMPORTANT]
 > **Task: implement alignment and coalescing in memory-coalesce.c**
 
-At this point running `make test-2` and `./test-2 1`, `./test-2 2`, `./test-2 3` should all pass.
+At this point running `make test-coalesce` and `./test-coalesce 1`, `./test-coalesce 2`, `./test-coalesce 3` should all pass.
 
 ## Part 3: Test your Basic Allocators
 
