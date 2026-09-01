@@ -115,7 +115,7 @@ Make sure to take into consideration that after splitting a block of memory, we 
 > - use a first-fit strategy to select a memory block
 > - Make sure to **split** the chosen allocation to not allocate too much memory!
 
-At this point running `make test` and `./test ALL` should pass.
+At this point running `make test` and `./test 0` and `./test 1` should pass.
 
 ## Part 2: Implement Malloc/Free with First Fit Strategy and Coalesce 
 
