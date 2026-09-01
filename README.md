@@ -2,6 +2,74 @@
 
 In this assignment, you will  build and profile a very simple implementation of malloc in C. Through this process, you will explore  the critical components of a memory management library. You will choose an allocation policy and a freelist structure. Then, you will explore how these choices can have performance implications!
 
+## Part 0: Helpful Tools: GDB
+
+A very helpful tool in this assignment will be GDB (GNU Debugger). GDB allows you to trace the execution of your programming, noting what lines trigger **Segmentation Faults** or other bugs!
+
+Make sure you install gdb on your machine:
+```
+sudo apt install gdb
+```
+
+Note: The Google Colab notebook automatically installs GDB for you if you run the "Everytime your Runtime Resets" notebook cell.
+
+To run GDB on an executable:
+```
+    gdb ./test
+```
+
+
+To run GDB on an executable with arguments:
+```
+    gdb --args ./test 0
+```
+
+Once you have started GDB you will see the following prompt:
+
+```
+GNU gdb (Ubuntu 12.1-0ubuntu1~22.04.2) 12.1
+Copyright (C) 2022 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./test...
+(gdb)
+```
+
+To interact with GDB use the following commands:
+- `run` starts the executable running
+- `break main.c:43` sets a breakpoint at the given line, in this case, line 43 of main.c
+    - `break func` you may also set a breakpoint at a function name
+- `continue` continues execution after a break point
+- `step` steps forward one line in the execution
+- `print variable` prints the value of the variable at this point in time
+
+For more information, follow the GNU-provided reference:
+[https://ftp.gnu.org/old-gnu/Manuals/gdb/html_mono/gdb.html](https://ftp.gnu.org/old-gnu/Manuals/gdb/html_mono/gdb.html)
+
+### Note: Segmentation Fault
+
+A segmentation fault occurs when you attempt to **dereference** a memory address that is disallowed! This fault is raised by the hardware when a process attempts to access some prohibited or non-existent region of memory.
+
+For example, the C code below, always triggers a segmentation fault, because the address 0x0 can not be dereferenced.
+```c
+int num = *((int*) 0x0);
+```
+
+
+
+
+
 
 ## Part 1: Implement Malloc/Free with First Fit Strategy
 
@@ -58,7 +126,7 @@ Take a look at `./test 3`'s output.
 Where does your strategy fall short?
 
 > [!IMPORTANT]
-> **Task: In questions.txt, describe why allocations fail in ./test 3**
+> Task: In questions.txt, describe why allocations fail in ./test 3. Label your answer (1).
 
 Now, we will implement a few improvements.
 
