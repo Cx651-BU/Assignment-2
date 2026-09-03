@@ -7,13 +7,13 @@ score=0
 for file in $binary; do
     if [[ ! -f "$file" ]]; then
         echo "FAIL: $file not made"
-        echo "SCORE: $score/7"
-        break 
+        echo "SCORE: $score/9"
+        exit 0 
     fi
 done
 
 
-for (( i = 0; i < 2; i++ )); do
+for (( i = 0; i < 3; i++ )); do
     echo "TEST: ./test $i"
     ./test $i > /dev/null
     if [ "$?" -eq 1 ]; then
@@ -23,7 +23,7 @@ for (( i = 0; i < 2; i++ )); do
     fi
 done
 
-for (( i = 0; i < 3; i++ )); do
+for (( i = 0; i < 4; i++ )); do
     echo "TEST: ./test-coalesce $i"
     ./test-coalesce $i > /dev/null
     if [ "$?" -eq 1 ]; then
@@ -60,4 +60,4 @@ else
     echo "  --FAIL!"
 fi
 
-echo "SCORE: $score/7"
+echo "SCORE: $score/9"
