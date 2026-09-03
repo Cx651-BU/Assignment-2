@@ -44,7 +44,7 @@ fi
 
 
 echo "TEST: questions.txt is non-empty and contains questions (1) through (N)"
-N=2
+N=3
 if [ -f questions.txt ] && [ "$(wc -c < questions.txt)" -gt 200 ]; then
     passed=true
     for ((i=1; i<=N; i++)); do
