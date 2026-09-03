@@ -160,7 +160,7 @@ int main(int argc, char **argv){
     int test_num = atoi(argv[1]);
     
     char *test_list[] = {"Test One Malloc","Test Many Malloc", "Test Many Malloc/Free", "Test Many Malloc/Free Stats", "Bench32", "Bench64", "Bench128","Bench256"};
-    int (*test_func[])() = {&test_one, &test_no_free, &test_many, &test_many_output_stats, &test_many_output_stats32, &test_many_output_stats64, &test_many_output_stats128, &test_many_output_stats256};
+    int (*test_func[])() = {&test_one, &test_no_free, &test_many, &test_many_output_stats128, &test_many_output_stats32, &test_many_output_stats64, &test_many_output_stats128, &test_many_output_stats256};
 
     passed += run_test(test_list[test_num], test_func[test_num]);
     int tests_ran = 1;
